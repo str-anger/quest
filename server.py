@@ -88,7 +88,7 @@ def problem_accept(teamcode, problemcode):
         return render_template('problem.html',
                 task=problems[problemcode]['text'],
                 team=teamcode,
-                toptext="Кажется ответ неправильный. Попробуйте ещё раз" + problems[problemcode]['answer'])
+                toptext="Кажется ответ неправильный. Попробуйте ещё раз")
     else:
         # correct guess
         idx = teams[teamcode].index(problemcode)
