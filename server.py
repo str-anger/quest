@@ -1,4 +1,6 @@
-#! export FLASK_APP=server.py ; python -m flask run
+# -*- coding: utf-8 -*-
+
+##! export FLASK_APP=server.py ; python -m flask run
 from flask import Flask, request, render_template, redirect, url_for
 from markupsafe import escape
 import os
@@ -22,10 +24,10 @@ def get_problems():
         fansw = os.path.join('problems', file + '.answer')
         result[file] = {
             'text': open(ftext, 'r').read(),
-            'answer': open(fansw, 'r').read() if os.path.exists(fansw) else None
+            'answer': open(fansw, 'r').read() if os.path.exists(fansw) else ""
         }
     return result
-    
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -44,14 +46,14 @@ def index_post():
             return redirect(('/Q/' + teamcode + '/' + teams[teamcode][0]))
     else:
         return render_template('index.html', toptext="Вы не ввели код. Пожалуйста, введите заново. Регистр важен!")
-        
-        
+
+
 @app.route('/Q/<teamcode>/<problemcode>', methods=['GET'])
 def problem_show(teamcode, problemcode):
     # process problems
     if not teamcode:
         return redirect(url_for('/'))
-        
+
     teams = get_teams()
     if not problemcode:
         teams = get_teams()
@@ -59,12 +61,13 @@ def problem_show(teamcode, problemcode):
             return redirect(url_for('/'))
         else:
             return redirect(('/Q/' + teamcode + '/' + teams['teamcode'][0]))
-    
+
     # show problem
     problems = get_problems()
     idx = teams[teamcode].index(problemcode)
     epic = idx == len(teams[teamcode]) - 1
-    return render_template('problem.html', task=problems[problemcode]['text'], team=teamcode, epic=epic)
+    empty = problems[problemcode]['answer'] == ""
+    return render_template('problem.html', task=problems[problemcode]['text'], team=teamcode, epic=epic, empty=empty)
 
 
 @app.route('/Q/<teamcode>/<problemcode>', methods=['POST'])
@@ -78,15 +81,13 @@ def problem_accept(teamcode, problemcode):
             return redirect(url_for('/'))
         else:
             return redirect(('/Q/' + teamcode + '/' + teams[teamcode][0]))
-    
-    print("!!!")
+
     problems = get_problems()
     ans = request.form['answer'] if 'answer' in request.form else None
-    print(ans)
     if ans != problems[problemcode]['answer']:
-        return render_template('problem.html', 
-                task=problems[problemcode]['text'], 
-                team=teamcode, 
+        return render_template('problem.html',
+                task=problems[problemcode]['text'],
+                team=teamcode,
                 toptext="Кажется ответ неправильный. Попробуйте ещё раз" + problems[problemcode]['answer'])
     else:
         # correct guess

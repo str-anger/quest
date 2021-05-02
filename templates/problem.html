@@ -4,16 +4,20 @@
 <meta charset="utf-8"/>
 </head>
 <body>
-Команда <b>{{ team }}</b>.<br/>
-{{ toptext }}
+Команда <b>{{ (team or "").decode('utf-8') }}</b>.<br/>
+{{ (toptext or "").decode('utf-8') }}
 <hr/>
 <b>Задание</b><br/> 
-{{ task }}
+{{ (task or "").decode('utf-8') }}
 <hr/>
 <b>Ваш ответ</b><br/>
 {% if not epic %}
 <form method='POST'>
+{% if not empty %}
 <input type="text" name="answer"/>
+{% else %}
+<input type="hidden" name="answer"/>
+{% endif %}
 <input type="submit" value="А ну ка!"/>
 </form>
 {% endif %}
