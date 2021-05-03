@@ -8,17 +8,18 @@
 {{ (toptext or "").decode('utf-8') }}
 <hr/>
 <b>Задание</b><br/> 
-{{ (task or "").decode('utf-8') }}
+{{ (task or "").decode('utf-8')|safe }}
 <hr/>
-<b>Ваш ответ</b><br/>
+<br/>
 {% if not epic %}
 <form method='POST'>
 {% if not empty %}
 <input type="text" name="answer"/>
+<input type="submit" value="А ну-ка!"/>
 {% else %}
 <input type="hidden" name="answer"/>
+<input type="submit" value="Я пришёл!"/>
 {% endif %}
-<input type="submit" value="А ну ка!"/>
 </form>
 {% endif %}
 </body>

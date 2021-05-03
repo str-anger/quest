@@ -11,7 +11,7 @@ def get_teams():
     result = {}
     for file in os.listdir('teams'):
         fn = os.path.join('teams', file)
-        result[file] = open(fn, 'r').read().strip().split('\n')
+        result[file] = [x.strip() for x in open(fn, 'r').read().strip().split('\n') if x]
     return result
 
 
